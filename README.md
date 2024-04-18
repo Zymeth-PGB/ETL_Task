@@ -7,11 +7,15 @@
 - `Apache Spark` : 3.5.1
 - `Apache Hadoop` : 3.x
 
+***
+
 ### Data
 
 - Dữ liệu 1 file là ghi lại hành động 1 ngày của các user được lưu dưới dạng `json`. 
   
 - Ta có 30 file thể hiện hoạt động trong 30 ngày của các user về các hoạt động xem các kênh trực tuyến thuộc thể loại nào.
+
+***
 
 ### Task
 
