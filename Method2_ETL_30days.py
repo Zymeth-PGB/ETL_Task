@@ -73,6 +73,7 @@ def ETL_1_day(path, date):
     df = read_data(path)
     data = process_data(df, date)
     data = process_category(data)
+    data = pivot_data(data)
     
     return data
 
@@ -103,8 +104,6 @@ def main():
         else:
             df = df1
         
-    print("---------Pivoting Data--------------")
-    df = pivot_data(df)
     print("---------Printing output--------------")
     df.show()
     print("---------Saving output--------------")

@@ -7,14 +7,14 @@ from pyspark.sql.functions import *
 
 spark = SparkSession.builder.config("spark.driver.memory", "4g").getOrCreate()
 
-def read_data(path, date):
+def read_data(path):
     df = spark.read.json(path)
-    data = df.withColumn("Date", lit(date))
     
-    return data
+    return df
 
-def process_data(df):
-    data = df.select('_source.Contract', '_source.AppName', '_source.TotalDuration', 'Date')
+def process_data(df, date):
+    data = df.select('_source.Contract', '_source.AppName', '_source.TotalDuration')
+    data = data.withColumn("Date", lit(date))
     
     return data
 
@@ -69,6 +69,13 @@ def pivot_data(df):
     
     return data
 
+def ETL_1_day(path, date):
+    df = read_data(path)
+    data = process_data(df, date)
+    data = process_category(data)
+    
+    return data
+
 def main():
     PATH = "D:\\Study_DE\\Big Data Gen 7\\Class3\HW\\log_content\\202204"
 
@@ -78,7 +85,7 @@ def main():
     start = int(startDate[-2:])
     end = int(endDate[-2:])
     
-    print("---------Reading data from source--------------")
+    print("---------Reading data from source and Processing data--------------")
     
     for i in range(start, end + 1):
         if i < 10:
@@ -89,23 +96,19 @@ def main():
         path = PATH + days
         date = path.split('\\')[-1].split('.')[0]
         f_date = date[0:4] + "-" + date[4:6] + "-" + date[6:]
-        df1 = read_data(path, f_date)
+        df1 = ETL_1_day(path, f_date)
         
         if i > 1:
             df = df.union(df1)
         else:
             df = df1
-            
-    print("---------Processing data--------------")
-    df = process_data(df)
-    print("---------Categorize data--------------")
-    df = process_category(df)
+    
     print("---------Pivoting Data--------------")
     df = pivot_data(df)
     print("---------Printing output--------------")
     df.show()
     print("---------Saving output--------------")
-    df.repartition(1).write.csv(PATH[0:-6] + 'Method1_ETL_30days', mode="overwrite", header = True)
+    df.repartition(1).write.csv(PATH[0:-6] + 'Method2_ETL_30days', mode="overwrite", header = True)
     return print("Task Finished")
 
 if __name__ == "__main__":
