@@ -77,7 +77,7 @@ def ETL_1_day(path, date):
     return data
 
 def main():
-    PATH = "D:\\Study_DE\\Big Data Gen 7\\Class3\HW\\log_content\\202204"
+    PATH = "log_content\\202204"
 
     startDate = input('Enter start date: ')
     endDate = input('Enter end date: ')
@@ -112,4 +112,5 @@ def main():
     return print("Task Finished")
 
 if __name__ == "__main__":
+
     main()
